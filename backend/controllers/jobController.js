@@ -81,3 +81,23 @@ export const applyJob = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+export const getFilteredJobs = async (req, res) => {
+  try {
+    const { title, location, salaryMin, salaryMax, jobType } = req.query;
+
+    let filter = {};
+
+    if (title) filter.title = { $regex: title, $options: "i" };
+    if (location) filter.location = { $regex: location, $options: "i" };
+    if (salaryMin && salaryMax) filter.salary = { $gte: salaryMin, $lte: salaryMax };
+    if (jobType) filter.jobType = jobType; // Example: 'Full-time' or 'Part-time'
+
+    const jobs = await Job.find(filter);
+    res.status(200).json(jobs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+

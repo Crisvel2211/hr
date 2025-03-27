@@ -1,24 +1,27 @@
 import EmployeeDetails from "../models/employeeDetails.js";
 import fs from "fs"; // File system module for deleting files
 
+
 export const createEmployeeDetails = async (req, res) => {
   try {
-    const { userId, fullname, address, birthdate, gender, nationality, civilStatus, education, experience, skills, linkedin } = req.body;
+    const { 
+      userId, fullname, email, address, birthdate, gender, nationality, 
+      civilStatus, education, experience, skills, linkedin, department, role 
+    } = req.body;
+
     const resumePath = req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : null;
 
-
-
-    // 🔍 Check if employee details already exist for this user
+    // Check if employee details already exist for this user
     const existingEmployee = await EmployeeDetails.findOne({ userId });
-
     if (existingEmployee) {
       return res.status(400).json({ message: "Employee details already exist for this user" });
     }
 
-    // ✅ Create a new employee details entry
+    // Create new employee details with default values if missing
     const employeeDetails = new EmployeeDetails({
       userId,
       fullname,
+      email,
       address,
       birthdate,
       gender,
@@ -27,8 +30,10 @@ export const createEmployeeDetails = async (req, res) => {
       education,
       experience,
       skills: skills ? skills.split(",") : [], // Convert string to array
-      resume: resumePath, // Store file path
+      resume: resumePath,
       linkedin,
+      department: department || "Logistic2", // Default to "Logistic2"
+      role: role || "Employee", // Default to "New Hired Employee"
     });
 
     await employeeDetails.save();
@@ -42,11 +47,12 @@ export const createEmployeeDetails = async (req, res) => {
 
 
 
+
 // 📌 Update Employee Details with Resume Upload
 export const updateEmployeeDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    const { fullname, address, birthdate, gender, nationality, civilStatus, education, experience, skills, linkedin } = req.body;
+    const { fullname, address, birthdate, gender, nationality, civilStatus, education, experience, skills, linkedin, email,role, department } = req.body;
 
     // Find existing employee details
     const employeeDetails = await EmployeeDetails.findById(id);
@@ -73,6 +79,7 @@ export const updateEmployeeDetails = async (req, res) => {
       {
         fullname,
         address,
+        email,
         birthdate,
         gender,
         nationality,
@@ -82,6 +89,8 @@ export const updateEmployeeDetails = async (req, res) => {
         skills: skills ? skills.split(",") : [], // Convert string to array
         resume: resumePath, // Update resume if changed
         linkedin,
+        department,
+        role
       },
       { new: true }
     );

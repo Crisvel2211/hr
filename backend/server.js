@@ -9,8 +9,15 @@ import mongoDb from "./config/mongoDb.js";
 import jobRoutes from "./routes/jobRoutes.js"
 import employeeDetailsRoutes from "./routes/employeeDetailsRoutes.js";
 import applicationRoutes from './routes/applicationRoutes.js';
+import applicationTrack from './routes/applicantionTrack.js';
+import interviewRoutes from "./routes/interviewScheduleRoutes.js";
+import quizRoutes from './routes/quizRoutes.js';
+import questionRoutes from './routes/questionRoutes.js';
+import resultRoutes from './routes/resultRoutes.js';
+import userSelectionRoutes from './routes/userSelectionRoutes.js';
+import promotionRoutes from "./routes/promotionRoutes.js";
+import shiftRoutes from "./routes/shift.js";
 
-// 🟢 Define __dirname manually (since it's not available in ES modules)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -30,6 +37,14 @@ app.use("/api/auth", authRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 app.use('/api/applications', applicationRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api', applicationTrack); 
+app.use("/api/interviews", interviewRoutes);
+app.use('/api/quiz', quizRoutes);
+app.use('/api/question', questionRoutes);
+app.use('/api/result', resultRoutes);
+app.use('/api/user-selections', userSelectionRoutes); 
+app.use("/api/promotions", promotionRoutes);
+app.use("/api/shifts", shiftRoutes);
 
 app.get('/', (req, res) => {
     res.send('backend is running')

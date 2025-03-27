@@ -5,16 +5,18 @@ import {
   getJobById,
   updateJob,
   deleteJob,
-  applyJob
+  applyJob,
+  getFilteredJobs
 } from '../controllers/jobController.js';
 
 const router = express.Router();
 
 router.post('/', createJob);         // Create job
 router.get('/', getJobs);            // Get all jobs
-router.get('/:id', getJobById);      // Get single job
 router.put('/:id', updateJob);       // Update job
 router.delete('/:id', deleteJob);    // Delete job
-router.post('/:id/apply', applyJob); // Apply for job
+router.post('/:id/apply', applyJob);
+router.get("/filter", getFilteredJobs); // Apply for job
+router.get('/:id', getJobById);  
 
 export default router;
